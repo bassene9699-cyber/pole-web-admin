@@ -10,8 +10,6 @@ const Header = () => {
 
     navigate("/login");
 
-    window.location.reload();
-
   };
 
   return (
