@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = ({ toggleMenu }) => {
+const Header = ({ toggleMenu, isMobile }) => {
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
+
     localStorage.removeItem("token");
+
     navigate("/login");
+
   };
 
   return (
@@ -23,16 +26,19 @@ const Header = ({ toggleMenu }) => {
       }}
     >
 
-      {/* LEFT SIDE */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <MenuIcon
-          onClick={toggleMenu}
-          style={{ cursor: "pointer" }}
-        />
+
+        {isMobile && (
+          <MenuIcon
+            onClick={toggleMenu}
+            style={{ cursor: "pointer" }}
+          />
+        )}
+
         <h3 style={{ margin: 0 }}>Admin</h3>
+
       </div>
 
-      {/* RIGHT SIDE */}
       <button
         onClick={handleLogout}
         style={{

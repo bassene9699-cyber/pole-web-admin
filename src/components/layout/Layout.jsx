@@ -12,23 +12,39 @@ const Layout = () => {
 
   return (
 
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
 
       {/* Sidebar desktop */}
-      {!isMobile && <Sidebar />}
+      {!isMobile && (
+        <div style={{ width: "220px", flexShrink: 0 }}>
+          <Sidebar />
+        </div>
+      )}
 
       {/* Sidebar mobile */}
       {isMobile && (
-        <Drawer open={open} onClose={() => setOpen(false)}>
+        <Drawer
+          open={open}
+          onClose={() => setOpen(false)}
+        >
           <Sidebar />
         </Drawer>
       )}
 
       <div style={{ flex: 1 }}>
 
-        <Header toggleMenu={() => setOpen(true)} />
+        <Header
+          toggleMenu={() => setOpen(true)}
+          isMobile={isMobile}
+        />
 
-        <div style={{ padding: "20px" }}>
+        <div
+          style={{
+            padding: "20px",
+            maxWidth: "100%",
+            overflowX: "auto"
+          }}
+        >
           <Outlet />
         </div>
 
