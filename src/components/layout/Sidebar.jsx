@@ -23,6 +23,12 @@ const Sidebar = () => {
         </p>
 
         <p>
+          <Link to="/projects" style={{ color: "white" }}>
+            Projects
+          </Link>
+        </p>
+
+        <p>
           <Link to="/zones" style={{ color: "white" }}>
             Zones
           </Link>
