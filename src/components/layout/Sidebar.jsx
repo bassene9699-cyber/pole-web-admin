@@ -4,17 +4,15 @@ const Sidebar = () => {
 
   return (
 
-    <div style={{
-      width: "220px",
-      minWidth: "220px",
-      height: "100vh",
-      background: "#1e293b",
-      color: "white",
-      padding: "20px",
-      position: "fixed",
-      left: 0,
-      top: 0
-    }}>
+    <div
+      style={{
+        width: "220px",
+        height: "100vh",
+        background: "#1e293b",
+        color: "white",
+        padding: "20px"
+      }}
+    >
 
       <h2>Admin</h2>
 

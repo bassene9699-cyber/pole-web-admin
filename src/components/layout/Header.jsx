@@ -6,11 +6,8 @@ const Header = ({ toggleMenu }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-
     localStorage.removeItem("token");
-
     navigate("/login");
-
   };
 
   return (
@@ -26,11 +23,16 @@ const Header = ({ toggleMenu }) => {
       }}
     >
 
-      <MenuIcon
-        onClick={toggleMenu}
-        style={{ cursor: "pointer" }}
-      />
+      {/* LEFT SIDE */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <MenuIcon
+          onClick={toggleMenu}
+          style={{ cursor: "pointer" }}
+        />
+        <h3 style={{ margin: 0 }}>Admin</h3>
+      </div>
 
+      {/* RIGHT SIDE */}
       <button
         onClick={handleLogout}
         style={{

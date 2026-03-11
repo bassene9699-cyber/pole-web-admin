@@ -2,27 +2,29 @@ import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import { Drawer } from "@mui/material";
+import { Drawer, useMediaQuery } from "@mui/material";
 
 const Layout = () => {
 
   const [open, setOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   return (
 
     <div style={{ display: "flex" }}>
 
       {/* Sidebar desktop */}
-      <div className="desktop-sidebar">
-        <Sidebar />
-      </div>
+      {!isMobile && <Sidebar />}
 
       {/* Sidebar mobile */}
-      <Drawer open={open} onClose={() => setOpen(false)}>
-        <Sidebar />
-      </Drawer>
+      {isMobile && (
+        <Drawer open={open} onClose={() => setOpen(false)}>
+          <Sidebar />
+        </Drawer>
+      )}
 
-      <div style={{ flex: 1, marginLeft: "220px" }}>
+      <div style={{ flex: 1 }}>
 
         <Header toggleMenu={() => setOpen(true)} />
 
