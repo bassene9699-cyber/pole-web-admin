@@ -10,7 +10,7 @@ const Layout = () => {
 
       <Sidebar />
 
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, marginLeft: "220px" }}>
 
         <Header />
 
