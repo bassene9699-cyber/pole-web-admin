@@ -1,8 +1,48 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+
+import "leaflet/dist/leaflet.css";
+
+const greenIcon = new L.Icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  iconSize: [32, 32]
+});
+
+const yellowIcon = new L.Icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+  iconSize: [32, 32]
+});
+
+const redIcon = new L.Icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  iconSize: [32, 32]
+});
+
 
 const InstallationsMap = ({ installations }) => {
 
-  const center = [14.7167, -17.4677]; // Dakar par défaut
+  const defaultCenter = [14.7167, -17.4677]; // Dakar
+
+  const getIcon = (status) => {
+
+    if (status === "VALIDATED") return greenIcon;
+
+    if (status === "REJECTED") return redIcon;
+
+    return yellowIcon;
+
+  };
+
+
+  const validInstallations = installations.filter(
+    (i) => i.latitude && i.longitude
+  );
+
+  const center =
+    validInstallations.length > 0
+      ? [validInstallations[0].latitude, validInstallations[0].longitude]
+      : defaultCenter;
+
 
   return (
 
@@ -16,22 +56,34 @@ const InstallationsMap = ({ installations }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {installations.map((inst) => (
+      {validInstallations.map((inst) => (
 
         <Marker
           key={inst.id}
           position={[inst.latitude, inst.longitude]}
+          icon={getIcon(inst.validation_status)}
         >
 
           <Popup>
 
-            <b>{inst.pole_reference}</b>
+            <b>Pole:</b> {inst.pole_reference}
+
             <br />
 
-            Worker: {inst.installed_by}
+            <b>Worker:</b> {inst.installed_by}
+
             <br />
 
-            Network: {inst.network_type}
+            <b>Network:</b> {inst.network_type}
+
+            <br />
+
+            <b>Status:</b> {inst.validation_status}
+
+            <br />
+
+            <b>Date:</b>{" "}
+            {new Date(inst.created_at).toLocaleString()}
 
           </Popup>
 
