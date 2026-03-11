@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, TextField } from "@mui/material";
 
 const ProjectsPage = () => {
 
@@ -7,18 +9,8 @@ const ProjectsPage = () => {
   const [name, setName] = useState("");
 
   const fetchProjects = async () => {
-
-    try {
-
-      const res = await api.get("/projects");
-      setProjects(res.data);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
+    const res = await api.get("/projects");
+    setProjects(res.data);
   };
 
   useEffect(() => {
@@ -27,96 +19,73 @@ const ProjectsPage = () => {
 
   const createProject = async () => {
 
-    try {
+    await api.post("/projects", { name });
 
-      await api.post("/projects", { name });
+    setName("");
 
-      setName("");
-
-      fetchProjects();
-
-    } catch (error) {
-
-      alert("Error creating project");
-
-    }
-
+    fetchProjects();
   };
 
   const deleteProject = async (id) => {
 
-    try {
+    await api.delete(`/projects/${id}`);
 
-      await api.delete(`/projects/${id}`);
-
-      fetchProjects();
-
-    } catch (error) {
-
-      alert("Error deleting project");
-
-    }
-
+    fetchProjects();
   };
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+
+    { field: "name", headerName: "Project Name", flex: 1 },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => deleteProject(params.row.id)}
+        >
+          Delete
+        </Button>
+      )
+    }
+  ];
 
   return (
 
-    <div style={{ padding: "20px" }}>
+    <div>
 
       <h2>Projects</h2>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
 
-        <input
-          type="text"
-          placeholder="Project name"
+        <TextField
+          label="Project name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
-        <button onClick={createProject}>
+        <Button
+          variant="contained"
+          onClick={createProject}
+        >
           Create
-        </button>
+        </Button>
 
       </div>
 
-      <table border="1" cellPadding="10">
+      <div style={{ height: 400 }}>
 
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+        <DataGrid
+          rows={projects}
+          columns={columns}
+          pageSize={5}
+        />
 
-        <tbody>
-
-          {projects.map((project) => (
-
-            <tr key={project.id}>
-
-              <td>{project.id}</td>
-              <td>{project.name}</td>
-
-              <td>
-
-                <button
-                  onClick={() => deleteProject(project.id)}
-                  style={{ background: "red", color: "white" }}
-                >
-                  Delete
-                </button>
-
-              </td>
-
-            </tr>
-
-          ))}
-
-        </tbody>
-
-      </table>
+      </div>
 
     </div>
 

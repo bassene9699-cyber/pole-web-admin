@@ -22,7 +22,8 @@ const StatCard = ({ title, value }) => {
       elevation={3}
       sx={{
         padding: 3,
-        textAlign: "center"
+        textAlign: "center",
+        height: "100%"
       }}
     >
 
@@ -105,33 +106,41 @@ const DashboardPage = () => {
 
     <Box sx={{ flexGrow: 1, padding: 3 }}>
 
+      <Typography
+        variant="h4"
+        sx={{ marginBottom: 4 }}
+      >
+        Dashboard
+      </Typography>
+
+
       <Grid container spacing={3}>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="Projects" value={stats.projects || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="Zones Total" value={stats.zones_total || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="Zones Completed" value={stats.zones_completed || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="Zones Partial" value={stats.zones_partial || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="Installations Today" value={stats.installations_today || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="BT Installations" value={stats.bt_total || 0} />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard title="HTA Installations" value={stats.hta_total || 0} />
         </Grid>
 
@@ -164,7 +173,11 @@ const DashboardPage = () => {
           Installations Map
         </Typography>
 
-        <InstallationsMap installations={installations} />
+        <Box sx={{ height: 500 }}>
+
+          <InstallationsMap installations={installations} />
+
+        </Box>
 
       </Box>
 

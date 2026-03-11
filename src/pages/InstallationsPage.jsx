@@ -7,13 +7,10 @@ import {
   deleteInstallation
 } from "../services/installationsService";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+
+import { DataGrid } from "@mui/x-data-grid";
 
 import InstallationsMap from "../components/maps/InstallationsMap";
 
@@ -43,7 +40,7 @@ const InstallationsPage = () => {
 
     await validateInstallation(id);
 
-    await loadInstallations();
+    loadInstallations();
 
   };
 
@@ -56,7 +53,7 @@ const InstallationsPage = () => {
 
     await rejectInstallation(id, reason);
 
-    await loadInstallations();
+    loadInstallations();
 
   };
 
@@ -69,9 +66,98 @@ const InstallationsPage = () => {
 
     await deleteInstallation(id);
 
-    await loadInstallations();
+    loadInstallations();
 
   };
+
+
+  const columns = [
+
+    { field: "pole_reference", headerName: "Pole", flex: 1 },
+
+    { field: "network_type", headerName: "Network", width: 120 },
+
+    { field: "installed_by", headerName: "Worker", flex: 1 },
+
+    {
+      field: "created_at",
+      headerName: "Date",
+      flex: 1,
+      valueGetter: (params) =>
+        new Date(params.value).toLocaleString()
+    },
+
+    { field: "validation_status", headerName: "Status", width: 140 },
+
+    {
+      field: "photo",
+      headerName: "Photo",
+      width: 120,
+      renderCell: (params) => (
+
+        <img
+          src={`http://127.0.0.1:8000/${params.row.photo_path}`}
+          width="70"
+          alt="pole"
+        />
+
+      )
+    },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 260,
+      renderCell: (params) => {
+
+        const inst = params.row;
+
+        return (
+
+          <div style={{ display: "flex", gap: 8 }}>
+
+            {inst.validation_status === "PENDING" && (
+
+              <>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => handleValidate(inst.id)}
+                >
+                  Validate
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleReject(inst.id)}
+                >
+                  Reject
+                </Button>
+              </>
+
+            )}
+
+            {inst.validation_status === "REJECTED" && (
+
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDelete(inst.id)}
+              >
+                Delete
+              </Button>
+
+            )}
+
+          </div>
+
+        );
+
+      }
+    }
+
+  ];
 
 
   return (
@@ -82,98 +168,18 @@ const InstallationsPage = () => {
 
       <InstallationsMap installations={installations} />
 
-      <Table>
+      <div style={{ height: 500, marginTop: 20 }}>
 
-        <TableHead>
+        <DataGrid
+          rows={installations}
+          columns={columns}
+          pageSizeOptions={[5, 10, 20]}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 5 } }
+          }}
+        />
 
-          <TableRow>
-
-            <TableCell>Pole</TableCell>
-            <TableCell>Network</TableCell>
-            <TableCell>Worker</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Photo</TableCell>
-            <TableCell>Action</TableCell>
-
-          </TableRow>
-
-        </TableHead>
-
-        <TableBody>
-
-          {installations.map((inst) => (
-
-            <TableRow key={inst.id}>
-
-              <TableCell>{inst.pole_reference}</TableCell>
-
-              <TableCell>{inst.network_type}</TableCell>
-
-              <TableCell>{inst.installed_by}</TableCell>
-
-              <TableCell>
-                {new Date(inst.created_at).toLocaleString()}
-              </TableCell>
-
-              <TableCell>{inst.validation_status}</TableCell>
-
-              <TableCell>
-
-                <img
-                  src={`http://127.0.0.1:8000/${inst.photo_path}`}
-                  width="80"
-                  alt="pole"
-                />
-
-              </TableCell>
-
-              <TableCell>
-
-                {inst.validation_status === "PENDING" && (
-
-                  <>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleValidate(inst.id)}
-                    >
-                      Validate
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleReject(inst.id)}
-                      style={{ marginLeft: 10 }}
-                    >
-                      Reject
-                    </Button>
-                  </>
-
-                )}
-
-                {inst.validation_status === "REJECTED" && (
-
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleDelete(inst.id)}
-                  >
-                    Delete
-                  </Button>
-
-                )}
-
-              </TableCell>
-
-            </TableRow>
-
-          ))}
-
-        </TableBody>
-
-      </Table>
+      </div>
 
     </Paper>
 

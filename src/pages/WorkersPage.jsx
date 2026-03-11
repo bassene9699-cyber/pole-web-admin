@@ -6,6 +6,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
+import { DataGrid } from "@mui/x-data-grid";
+
 const WorkersPage = () => {
 
   const [workers, setWorkers] = useState([]);
@@ -59,86 +61,101 @@ const WorkersPage = () => {
   };
 
 
+  const columns = [
+
+    { field: "id", headerName: "ID", width: 90 },
+
+    { field: "full_name", headerName: "Name", flex: 1 },
+
+    { field: "email", headerName: "Email", flex: 1 },
+
+    { field: "role", headerName: "Role", width: 130 },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => handleDelete(params.row.id)}
+        >
+          Delete
+        </Button>
+
+      )
+    }
+
+  ];
+
+
   return (
 
     <Paper style={{ padding: 20 }}>
 
       <h2>Create Worker</h2>
 
-      <TextField
-        label="Full name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
 
-      <TextField
-        label="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ marginLeft: 10 }}
-      />
+        <TextField
+          label="Full name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-      <TextField
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ marginLeft: 10 }}
-      />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <TextField
-        select
-        label="Role"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        style={{ marginLeft: 10, width: 150 }}
-      >
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <MenuItem value="OUVRIER">OUVRIER</MenuItem>
-        <MenuItem value="CHEF">CHEF</MenuItem>
-        <MenuItem value="ADMIN">ADMIN</MenuItem>
+        <TextField
+          select
+          label="Role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          style={{ width: 150 }}
+        >
 
-      </TextField>
+          <MenuItem value="OUVRIER">OUVRIER</MenuItem>
+          <MenuItem value="CHEF">CHEF</MenuItem>
+          <MenuItem value="ADMIN">ADMIN</MenuItem>
 
-      <Button
-        variant="contained"
-        onClick={handleCreate}
-        style={{ marginLeft: 10 }}
-      >
-        Create
-      </Button>
+        </TextField>
+
+        <Button
+          variant="contained"
+          onClick={handleCreate}
+        >
+          Create
+        </Button>
+
+      </div>
 
 
       <h2 style={{ marginTop: 30 }}>Workers</h2>
 
-      {workers.map((w) => (
+      <div style={{ height: 400, width: "100%" }}>
 
-        <Paper
-          key={w.id}
-          style={{
-            padding: 10,
-            marginTop: 10,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
+        <DataGrid
+          rows={workers}
+          columns={columns}
+          pageSizeOptions={[5, 10, 20]}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 5 } }
           }}
-        >
+        />
 
-          <div>
-            {w.full_name} — {w.role} — {w.email}
-          </div>
-
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => handleDelete(w.id)}
-          >
-            Delete
-          </Button>
-
-        </Paper>
-
-      ))}
+      </div>
 
     </Paper>
 

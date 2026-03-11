@@ -18,6 +18,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
+import { DataGrid } from "@mui/x-data-grid";
+
 const ZonesPage = () => {
 
   const [projects, setProjects] = useState([]);
@@ -63,8 +65,6 @@ const ZonesPage = () => {
 
     await createZoneCatalog(zoneName, networkType);
 
-    alert("Zone created");
-
     setZoneName("");
 
     loadData();
@@ -74,8 +74,6 @@ const ZonesPage = () => {
   const handleAssignZone = async () => {
 
     await createZoneAssignment(projectId, zoneId, teamId);
-
-    alert("Zone assigned");
 
     setProjectId("");
     setTeamId("");
@@ -120,6 +118,92 @@ const ZonesPage = () => {
     loadData();
 
   };
+
+
+  const assignmentColumns = [
+
+    { field: "id", headerName: "ID", width: 90 },
+
+    { field: "zone_name", headerName: "Zone", flex: 1 },
+
+    { field: "project_name", headerName: "Project", flex: 1 },
+
+    { field: "team_name", headerName: "Team", flex: 1 },
+
+    { field: "status", headerName: "Status", width: 140 },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 400,
+      renderCell: (params) => (
+
+        <div style={{ display: "flex", gap: 10 }}>
+
+          <Button
+            variant="outlined"
+            onClick={() => handleInstallations(params.row.id)}
+          >
+            Installations
+          </Button>
+
+          <Button
+            variant="outlined"
+            onClick={() => handleAuditLog(params.row.id)}
+          >
+            Audit Log
+          </Button>
+
+          {params.row.status === "COMPLETED" && (
+
+            <Button
+              variant="contained"
+              onClick={() => handlePDF(params.row.id)}
+            >
+              PDF
+            </Button>
+
+          )}
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDelete(params.row.id)}
+          >
+            Delete
+          </Button>
+
+        </div>
+
+      )
+    }
+
+  ];
+
+
+  const installationColumns = [
+
+    { field: "id", headerName: "ID", width: 90 },
+
+    { field: "pole_reference", headerName: "Pole", flex: 1 },
+
+    { field: "network_type", headerName: "Network", flex: 1 },
+
+    { field: "installed_by", headerName: "Installed By", flex: 1 }
+
+  ];
+
+
+  const auditColumns = [
+
+    { field: "action", headerName: "Action", flex: 1 },
+
+    { field: "performed_by", headerName: "User", flex: 1 },
+
+    { field: "timestamp", headerName: "Timestamp", flex: 1 }
+
+  ];
+
 
   return (
 
@@ -228,91 +312,41 @@ const ZonesPage = () => {
 
       <h2 style={{ marginTop: 40 }}>Assigned Zones</h2>
 
-      {assignments.map((z) => (
+      <div style={{ height: 400 }}>
 
-        <Paper
-          key={z.id}
-          style={{
-            padding: 10,
-            marginTop: 10,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}
-        >
+        <DataGrid
+          rows={assignments}
+          columns={assignmentColumns}
+          pageSizeOptions={[5, 10, 20]}
+        />
 
-          <div>
-
-            <b>{z.zone_name}</b> — {z.project_name} — {z.team_name} — {z.status}
-
-            <div style={{ marginTop: 10 }}>
-
-              <Button
-                variant="outlined"
-                onClick={() => handleInstallations(z.id)}
-              >
-                Installations
-              </Button>
-
-              <Button
-                variant="outlined"
-                onClick={() => handleAuditLog(z.id)}
-                style={{ marginLeft: 10 }}
-              >
-                Audit Log
-              </Button>
-
-              {z.status === "COMPLETED" && (
-                <Button
-                  variant="contained"
-                  onClick={() => handlePDF(z.id)}
-                  style={{ marginLeft: 10 }}
-                >
-                  PDF Report
-                </Button>
-              )}
-
-            </div>
-
-          </div>
-
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => handleDelete(z.id)}
-          >
-            Delete
-          </Button>
-
-        </Paper>
-
-      ))}
+      </div>
 
 
       <h2 style={{ marginTop: 40 }}>Installations</h2>
 
-      {installations.map((i) => (
+      <div style={{ height: 300 }}>
 
-        <Paper key={i.id} style={{ padding: 10, marginTop: 10 }}>
+        <DataGrid
+          rows={installations}
+          columns={installationColumns}
+          pageSizeOptions={[5]}
+        />
 
-          {i.pole_reference} — {i.network_type} — {i.installed_by}
-
-        </Paper>
-
-      ))}
+      </div>
 
 
       <h2 style={{ marginTop: 40 }}>Audit Log</h2>
 
-      {auditLog.map((a, index) => (
+      <div style={{ height: 300 }}>
 
-        <Paper key={index} style={{ padding: 10, marginTop: 10 }}>
+        <DataGrid
+          rows={auditLog}
+          columns={auditColumns}
+          pageSizeOptions={[5]}
+        />
 
-          {a.action} — {a.performed_by} — {a.timestamp}
-
-        </Paper>
-
-      ))}
+      </div>
 
     </Paper>
 
