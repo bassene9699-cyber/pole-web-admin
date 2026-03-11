@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = () => {
+const Header = ({ toggleMenu }) => {
 
   const navigate = useNavigate();
 
@@ -19,11 +20,16 @@ const Header = () => {
         height: "60px",
         background: "#f1f5f9",
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
         alignItems: "center",
         padding: "0 20px"
       }}
     >
+
+      <MenuIcon
+        onClick={toggleMenu}
+        style={{ cursor: "pointer" }}
+      />
 
       <button
         onClick={handleLogout}
